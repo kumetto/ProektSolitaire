@@ -1,6 +1,5 @@
-package Games.TopsyTurvyQueens
+package SharedClasses
 {
-	import com.greensock.events.LoaderEvent;
 	import flash.display.*;
 	import flash.media.*;
 	import flash.events.*;
@@ -10,8 +9,6 @@ package Games.TopsyTurvyQueens
 	import flash.geom.*;
 	import com.greensock.*;
 	import com.greensock.easing.*;
-	import flash.ui.Keyboard;
-	import flash.geom.ColorTransform;
 	import flash.net.*;
 	
 	/**
@@ -48,7 +45,7 @@ package Games.TopsyTurvyQueens
 			var timer:Timer = new Timer(1000);
 			//Text field
 			tField= new TextField();
-			tField.y = 1;
+			tField.y = 2;
 			tField.height = 30;
 			tField.width = 200;
 			tField.x = 355;

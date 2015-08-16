@@ -1,6 +1,6 @@
 package Games.TopsyTurvyQueens
 {
-	import com.greensock.events.LoaderEvent;
+	
 	import flash.display.*;
 	import flash.media.*;
 	import flash.events.*;
@@ -10,9 +10,10 @@ package Games.TopsyTurvyQueens
 	import flash.geom.*;
 	import com.greensock.*;
 	import com.greensock.easing.*;
-	import flash.ui.Keyboard;
-	import flash.geom.ColorTransform;
 	import flash.net.*;
+	import SharedClasses.TimerCounter;
+	
+	
 	
 	/**
 	 * ...
@@ -28,7 +29,7 @@ package Games.TopsyTurvyQueens
 		{
 			loadBackground();
 			loadMenuButtons();
-			var time : TimerCounter = new TimerCounter();
+			var time:TimerCounter = new TimerCounter();
 			addChild(time);
 		
 		}
