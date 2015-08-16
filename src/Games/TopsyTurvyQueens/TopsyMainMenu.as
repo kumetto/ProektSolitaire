@@ -9,7 +9,7 @@ package Games.TopsyTurvyQueens
 	import flash.net.*;
 	import flash.geom.*;
 	import com.greensock.*;
-	import com.greensock.easing.*
+	import com.greensock.easing.*;
 	import flash.ui.Keyboard;
 	import flash.geom.ColorTransform;
 	import flash.net.*;
@@ -21,7 +21,6 @@ package Games.TopsyTurvyQueens
 	public class TopsyMainMenu extends Sprite
 	{
 		
-		
 		private var backgroundContainer:Sprite = new Sprite();
 		private var buttonsContainer:Sprite = new Sprite();
 		
@@ -29,6 +28,8 @@ package Games.TopsyTurvyQueens
 		{
 			loadBackground();
 			loadMenuButtons();
+			var time : TimerCounter = new TimerCounter();
+			addChild(time);
 		
 		}
 		
@@ -50,13 +51,13 @@ package Games.TopsyTurvyQueens
 			rulesButton.y = 5;
 			buttonsContainer.addChild(rulesButton);
 			
-			var soundButton:TopsyMenuButton = new TopsyMenuButton(100, 20, 30, 30, "Sound", true, 0, 0.5, -3);
-			soundButton.x = 406;
-			soundButton.y = 5;
-			buttonsContainer.addChild(soundButton);
+			//var soundButton:TopsyMenuButton = new TopsyMenuButton(100, 20, 30, 30, "Sound", true, 0, 0.5, -3);
+			//soundButton.x = 406;
+			//soundButton.y = 5;
+			//buttonsContainer.addChild(soundButton);
 			
-			var timerButton:TopsyMenuButton = new TopsyMenuButton(100, 20, 30, 30, "00:00:00", true, 0, 0.5, -3);
-			timerButton.x = 508;
+			var timerButton:TopsyMenuButton = new TopsyMenuButton(100, 20, 30, 30, "", true, 0, 0.5, -3);
+			timerButton.x = 406;
 			timerButton.y = 5;
 			buttonsContainer.addChild(timerButton);
 		
@@ -81,6 +82,5 @@ package Games.TopsyTurvyQueens
 		
 		}
 	}
-	
 
 }

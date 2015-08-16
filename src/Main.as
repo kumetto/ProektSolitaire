@@ -15,6 +15,7 @@ package
 		{
 			var game:TopsyMainMenu = new TopsyMainMenu();
 			addChild(game);
+			
 		}
 		
 	}
