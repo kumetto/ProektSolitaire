@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?> 
 <application xmlns="http://ns.adobe.com/air/application/18.0">
 	
-	<id>ProektSolitaire</id> 
+	<id>SolitaireTeamProject</id> 
 	<versionNumber>1.0</versionNumber> 
-	<filename>ProektSolitaire</filename> 
+	<filename>SolitaireTeamProject</filename> 
 	
-	<name>ProektSolitaire</name> 
+	<name>SolitaireTeamProject</name> 
 	<description></description> 
 	<copyright></copyright> 
 	
 	<initialWindow> 
-		<title>ProektSolitaire</title> 
-		<content>ProektSolitaire.swf</content> 
+		<title>SolitaireTeamProject</title> 
+		<content>SolitaireTeamProject.swf</content> 
 		<systemChrome>standard</systemChrome> 
 		<transparent>false</transparent> 
 		<visible>true</visible> 

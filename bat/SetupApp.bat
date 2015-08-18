@@ -10,9 +10,9 @@ cd %~dp0 & cd ..
 :: NOTICE: all paths are relative to project root
 
 :: Your certificate information
-set CERT_NAME="ProektSolitaire"
+set CERT_NAME="SolitaireTeamProject"
 set CERT_PASS=fd
-set CERT_FILE="bat\ProektSolitaire.p12"
+set CERT_FILE="bat\SolitaireTeamProject.p12"
 set SIGNING_OPTIONS=-storetype pkcs12 -keystore %CERT_FILE% -storepass %CERT_PASS%
 
 :: Application descriptor
@@ -28,7 +28,7 @@ set APP_ID=%APP_ID: =%
 
 :: Output
 set AIR_PATH=air
-set AIR_NAME=ProektSolitaire
+set AIR_NAME=SolitaireTeamProject
 
 :validation
 findstr /C:"<id>%APP_ID%</id>" "%APP_XML%" > NUL
