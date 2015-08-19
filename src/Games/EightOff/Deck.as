@@ -1,28 +1,18 @@
-package Games.GrandFather
+package Games.EightOff
+
 {
-	import flash.display.Sprite;
-	import SharedClasses.Card;
-	import flash.display.Bitmap;
-	import flash.display.Loader;
-	import flash.events.*;
-	import flash.net.*;
+	
 	/**
 	 * ...
-	 * @author
+	 * @author Kolarov
 	 */
-	public class Deck extends Sprite
+	import SharedClasses.Card
+	public class Deck
 	{
 		private var deck:Array = [];
-		private var cardsCount:int;
-		private var reloadTimesLeft:int = 1;
 		
-		private var deckSkinPath:String;
-		
-		public function Deck(deckSkinPathPar:String)
+		public function Deck()
 		{
-			this.deckSkinPath = deckSkinPathPar;
-			Assistant.fillContainerWithImg(this , "/Data/images/Cards/Skin1/0Back.png", 65, 100);
-			loadDeck();
 			loadDeck();
 		}
 		
@@ -92,24 +82,5 @@ package Games.GrandFather
 			this.deck.splice(randomNumber, 1);
 			return topCard;
 		}
-		
-		public function ReloadDeck(deckPileCards:Array):void
-		{
-			var deckPileTopCard:Card;
-			while(deckPileCards.length>0){
-				deckPileTopCard = deckPileCards.pop();
-				this.deck.push(deckPileTopCard);
-			}
-			this.reloadTimesLeft--;
-		}
-		
-		public function get CardsCount():int {
-			return this.deck.length;	
-		}
-		
-		public function get ReloadedTimesLeft():int {
-			return this.reloadTimesLeft;	
-		}
 	}
-
 }

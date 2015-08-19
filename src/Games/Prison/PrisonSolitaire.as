@@ -4,7 +4,6 @@ package Games.Prison
 	import flash.display.*;
 	import flash.geom.*;
 	import flash.net.URLRequest;
-	import Games.Prison.Objects.PrisonHelpMenu;
 	import SharedClasses.*
 	
 	/**
@@ -29,12 +28,13 @@ package Games.Prison
 		
 		private var cardsSkin:String;
 
+		private var score:int = 0;
+		
 		private var cards:Vector.<Card> = new Vector.<Card>();
 		private var isWin:Boolean = false;
 		private var isGameRunning:Boolean = true;
 		private var counterPlacedCards:int = 0;
 
-		
 		private var movCardCurrentSprite:Sprite;
 		private var movCardNewSprite:Sprite;
 		private var movingCardObject:Sprite;
@@ -95,6 +95,7 @@ package Games.Prison
 			menuContainer = null;
 			
 			showSurrenderButton();
+			
 			DealSolitaire();
 		}
 		
@@ -110,15 +111,27 @@ package Games.Prison
 			time.y = 60;
 			
 			buttonsContainer.x = STAGE_WIDTH - buttonWidth;
-			buttonsContainer.addChild(surrenderButton);
 			buttonsContainer.addChild(time);
+			buttonsContainer.addChild(surrenderButton);
 
 			addChild(buttonsContainer);
 		}
 		
 		private function showScore(e:MouseEvent):void
 		{
-			//TODO: 
+			menuContainer.removeChildAt(0);
+			//TODO: menuContainer.addChildAt(0) score menu 
+			
+			
+		}
+		
+		private function saveScore():void {
+			//get time 
+			var object:TimerCounter = buttonsContainer.getChildAt(0) as TimerCounter;
+			
+			//TODO: Save time
+			var time:String = object.GetTime;
+			//TODO: Save score
 		}
 		
 		private function DealSolitaire():void
@@ -175,7 +188,7 @@ package Games.Prison
 			for (var i:int = 0; i < reservedPiles; i++)
 			{
 				var reservedPile:Sprite = reservesContainer.getChildAt(i) as Sprite;
-				drawRandomCard(reservedPile);
+				dealRandomCard(reservedPile);
 			}
 		}
 		
@@ -190,7 +203,7 @@ package Games.Prison
 				{
 					var pileContainer:Sprite = taublePilesContainer.getChildAt(pile) as Sprite;
 					var cardY = (pileContainer.numChildren - 1) * CARDS_Y_SPACING;
-					drawRandomCard(pileContainer, cardY);
+					dealRandomCard(pileContainer, cardY);
 				}
 			}
 		}
@@ -233,6 +246,8 @@ package Games.Prison
 						movingCardObject.buttonMode = false;
 						movingCardObject.removeEventListener(MouseEvent.MOUSE_DOWN, startDraging);
 						movingCardObject.removeEventListener(MouseEvent.MOUSE_UP, stopDraging);
+						
+						score += 100;
 					}
 					else
 					{
@@ -472,13 +487,14 @@ package Games.Prison
 		
 		private function gameOver():void
 		{
+			saveScore();
 			isGameRunning = false;
 		}
 		
-		private function drawRandomCard(drawAt:Sprite, y:int = 0):void
+		private function dealRandomCard(dealAt:Sprite, y:int = 0):void
 		{
 			var rndCardNumber:int = randomRange(0, 51 - counterPlacedCards);
-			drawAt.addChild(cards[rndCardNumber]).y = y;
+			dealAt.addChild(cards[rndCardNumber]).y = y;
 			counterPlacedCards++;
 			cards.splice(rndCardNumber, 1);
 		}

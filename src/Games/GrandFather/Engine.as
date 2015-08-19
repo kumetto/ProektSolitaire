@@ -21,19 +21,24 @@ package Games.GrandFather
 		private var takenCardFieldPile:FieldPile;
 		private var takenCardDeckPile:DeckPile;
 		
-		private var isThereEmpties:Boolean = true;//for use object as reference
+		private var isThereEmpties:Boolean = true;//is field var for use object as reference
 		
-		public function Engine(deckPar:Deck, deckPilePar:DeckPile, fieldPilesPar:Array, sidePilesPar:Array, generalContainerPar:Sprite)
+		private var isGameRunning:Boolean;
+		private var isWin:Boolean;
+		
+		public function Engine(deckPar:Deck, deckPilePar:DeckPile, fieldPilesPar:Array, sidePilesPar:Array, generalContainerPar:Sprite,isGameRunningPar:Boolean,isWinPar:Boolean)
 		{
 			this.deck = deckPar;
 			this.deckPile = deckPilePar;
 			this.fieldPiles = fieldPilesPar;
 			this.sidePiles = sidePilesPar;
 			this.generalContainer = generalContainerPar;
+			this.isGameRunning = isGameRunningPar;
+			this.isWin = isWinPar;
 			dealing();
 			makeInteraction();
 		}
-		
+		//INITIAL DEALING
 		private function dealing():void {
 			Assistant.dealing(this.deck, this.fieldPiles);
 
@@ -71,7 +76,7 @@ package Games.GrandFather
 				}
 			}
 		}
-		
+		///////////////////////////INTERACTION//////////////////////////
 		private function makeInteraction():void
 		{
 			makeDeckInteractive();
@@ -79,8 +84,8 @@ package Games.GrandFather
 			makeInteractiveFieldPiles();
 		}
 		
+		
 		// DECK PILE INTERACTIVE
-
 		private function makeDeckPileInteractive():void {
 			Assistant.addEventListenerTo(this.deckPile, MouseEvent.MOUSE_DOWN, dragTopCardFromDeckPile);
 		}
@@ -114,6 +119,8 @@ package Games.GrandFather
 				}
 			}
 			
+			
+			
 			if (!isAllowed)
 			{
 				returnTakenCardToDeckPile();
@@ -128,7 +135,7 @@ package Games.GrandFather
 		}
 
 
-		// DECK INTERACTIVE/////////////////////////////////////////////////
+		// DECK INTERACTIVE
 		private function makeDeckInteractive():void
 		{
 			Assistant.addEventListenerTo(this.deck, MouseEvent.CLICK, putCardOnDeckPile);
@@ -140,18 +147,15 @@ package Games.GrandFather
 			var deckTopCard:Card = deck.giveTopCard();
 			this.deckPile.pushCard(deckTopCard);
 			autoFillEmptyFieldPiles();
-		}
-		
-		private function autoFillEmptyFieldPiles():void {
-			for (var fieldPileIndex:int = 0; fieldPileIndex < fieldPiles.length; fieldPileIndex++) {
-				var currentFieldPile:FieldPile = fieldPiles[fieldPileIndex];
-				if (currentFieldPile.TopCard == null) {
-					this.takenCard = deckPile.giveTopCard();
-					currentFieldPile.pushCard(this.takenCard);
-					//todo: motion from deck pile to currentFieldPile
-					break;
+			if (deck.CardsCount == 0) {
+				if(deck.ReloadedTimesLeft ==  0){
+					Assistant.removeEventListenerTo(this.deck, MouseEvent.CLICK, putCardOnDeckPile);
+					this.generalContainer.removeChild(this.deck);
 				}
-			}	
+				if (deck.ReloadedTimesLeft == 1) {
+					this.deck.ReloadDeck(this.deckPile.Cards);
+				}
+			}
 		}
 		
 		// FIELD PILES INTERACTIVE
@@ -183,7 +187,7 @@ package Games.GrandFather
 			takenCard.stopDrag();
 			var isAllowed:Boolean = false;
 			
-			for (var sidePileIndex:int = 0; sidePileIndex < sidePiles.length; sidePileIndex++)
+			for (var sidePileIndex:int = 0; sidePileIndex < this.sidePiles.length; sidePileIndex++)
 			{
 				var currentSidePile:SidePile = sidePiles[sidePileIndex];
 				if (this.takenCard.hitTestObject(currentSidePile))
@@ -204,27 +208,36 @@ package Games.GrandFather
 					break;
 					}
 				// if there is cards in side pile
-					if (currentSidePile.StartValue == 1 && this.takenCard.CardSign == currentSidePile.Sign && this.takenCard.CardValue == (currentSidePile.TopCard.CardValue + 1))
-					{
-						isAllowed = true;
-						this.generalContainer.removeChild(this.takenCard);
-						currentSidePile.pushCard(this.takenCard);
-						break;
-					}
-					if (currentSidePile.StartValue == 13 && this.takenCard.CardSign == currentSidePile.Sign && this.takenCard.CardValue == (currentSidePile.TopCard.CardValue - 1))
-					{
-						isAllowed = true;
-						this.generalContainer.removeChild(this.takenCard);
-						currentSidePile.pushCard(this.takenCard);
-						break;
+					if(currentSidePile.TopCard!=null){
+						if (currentSidePile.StartValue == 1 && this.takenCard.CardSign == currentSidePile.Sign && this.takenCard.CardValue == (currentSidePile.TopCard.CardValue + 1))
+						{
+							isAllowed = true;
+							this.generalContainer.removeChild(this.takenCard);
+							currentSidePile.pushCard(this.takenCard);
+							break;
+						}
+						if (currentSidePile.StartValue == 13 && this.takenCard.CardSign == currentSidePile.Sign && this.takenCard.CardValue == (currentSidePile.TopCard.CardValue - 1))
+						{
+							isAllowed = true;
+							this.generalContainer.removeChild(this.takenCard);
+							currentSidePile.pushCard(this.takenCard);
+							break;
+						}
 					}
 				}
-				Assistant.removeEventListenerTo(takenCard, MouseEvent.MOUSE_UP, dropTakenCardFromFieldPile);
 			}
-			
+			Assistant.removeEventListenerTo(this.takenCard, MouseEvent.MOUSE_UP, dropTakenCardFromFieldPile);
 			if (!isAllowed)
 			{
 				returnTakenCardToFieldPile();
+			}
+			else 
+			{
+				autoFillEmptyFieldPiles();	
+			}
+			if (Assistant.isThereWin(this.sidePiles)) {
+				this.isGameRunning = false;
+				this.isWin = true;
 			}
 		}
 		
@@ -233,6 +246,25 @@ package Games.GrandFather
 			this.takenCard.parent.removeChild(this.takenCard);
 			this.takenCardFieldPile.pushCard(this.takenCard);
 		}
+		
+		//////////////////////////////////////////////////////////////////////////////////////////////////
+		private function autoFillEmptyFieldPiles():void {
+			for (var fieldPileIndex:int = 0; fieldPileIndex < fieldPiles.length; fieldPileIndex++) {
+				var currentFieldPile:FieldPile = fieldPiles[fieldPileIndex];
+				if (currentFieldPile.TopCard == null) {
+					if (this.deckPile.TopCard == null) {
+						this.takenCard = deck.giveTopCard();
+					}
+					if (this.deckPile.TopCard != null) {
+						this.takenCard = deckPile.giveTopCard();
+					}
+					currentFieldPile.pushCard(this.takenCard);
+					//todo: motion from deck pile to currentFieldPile
+					break;
+				}
+			}	
+		}
+		
 	}
 
 }

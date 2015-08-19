@@ -2,12 +2,16 @@ package Games.GrandFather
 {
 	import flash.display.Sprite;
 	import flash.geom.Point;
+	import flash.events.MouseEvent;
+	import SharedClasses.Button;
+	import SharedClasses.TimerCounter;
 	/**
 	 * ...
 	 * @author Kolarov
 	 */
 	public class Grandfather extends Sprite
 	{
+		private var rulesText:String = "	This solitaire uses 104 cards (2 decks). You have 20 tableau piles with one card per pile and 8 foundations. \n Aces (one of each suit) are moved to the left four foundations as they become available. \n Kings (one of each suit) are moved to the right four foundations as they become available. \n The object of the game: To build the foundation Aces up in suit to Kings, to build the foundation Kings down in suit to Aces. \n The rules: The top cards of tableau piles are available for play on foundations. You can move the cards from the waste pile to any tableau pile regardless of suit or rank. Each pile may contain up to 2 cards. Spaces are filled automatically from the waste or the stock piles. Cards cannot be moved from one tableau pile to another. \n When you have made all the moves initially available, begin turning over cards from the stock to the waste pile. The top card of the waste pile is available for play on the foundations or the tableau. \n There is one redeal.";
 		private var deck:Deck;
 		private var deckPile:DeckPile;
 		private var fieldPiles:Array = [];
@@ -24,32 +28,94 @@ package Games.GrandFather
 		
 		private var cardSkinPath:String;
 		
+		private var buttonRules:Button;
+		private var rules:Rules;
+		private var isRulesHidden:Boolean = true;
+		private var buttonSurrender:GameButton;		
+		
+		private var isWin:Boolean = false;
+		private var isGameRunning:Boolean = true;
+		
+		private var timer:TimerCounter;
+		
 		public function Grandfather(cardSkingPathPar:String = "Data/images/Cards/Skin1/0Back.png") 
 		{
 			this.cardSkinPath = cardSkingPathPar;
 			loadInitialComponents();
-			gameEngine = new Engine(this.deck,this.deckPile,this.fieldPiles,this.sidePiles,this as Sprite);
+			gameEngine = new Engine(this.deck,this.deckPile,this.fieldPiles,this.sidePiles,this as Sprite,this.IsGameRunning,this.isWin);
 		}
 		
 		private function loadInitialComponents():void {
+			loadButtons();
+			loadTimer();
 			loadDeck();
 			loadDeckPile();
 			loadFieldPiles();
 			loadSidePiles();
 		}
 		
+		private function loadTimer():void {
+			this.timer = new TimerCounter(0,10);
+			this.timer.alpha = 0.4;
+			this.addChild(timer);
+		}
+		
+		private function loadButtons():void
+		{
+			loadButtonRules();
+			loadButtonSurrender();
+		}
+		
+		private function loadButtonSurrender():void {
+			this.buttonSurrender = new GameButton("Surrender");
+			this.addChild(this.buttonSurrender);
+			this.buttonSurrender.x = 720;
+			this.buttonSurrender.y = 0;
+			Assistant.addEventListenerTo(this.buttonSurrender, MouseEvent.CLICK, surrender)
+		}
+		
+		private function surrender(e:MouseEvent):void {
+			this.isWin = false;
+			this.isGameRunning = false;
+		}
+		
+		private function loadButtonRules():void
+		{
+			this.buttonRules = new Button(120,"How To Play...");
+			this.addChild(buttonRules);
+			this.buttonRules.x = 0;
+			this.buttonRules.y = 559;
+			Assistant.addEventListenerTo(this.buttonRules, MouseEvent.CLICK, showHideRules);
+			this.rules = new Rules(rulesText);
+		}
+		
+		private function showHideRules(e:MouseEvent):void
+		{
+			if (this.isRulesHidden)
+			{
+				this.addChild(rules);
+				this.isRulesHidden = false;
+			}
+			
+			else
+			{
+				this.removeChild(rules);
+				this.isRulesHidden = true;
+			}
+		}
+		
 		private function loadDeck():void {
 			this.deck = new Deck(this.cardSkinPath);
 			this.addChild(this.deck);
 			this.deck.x = 20;
-			this.deck.y = 20;
+			this.deck.y = 140;
 		}
 		
 		private function loadDeckPile():void {
 			this.deckPile = new DeckPile();
 			this.addChild(this.deckPile);
 			this.deckPile.x = 20;
-			this.deckPile.y = 140;
+			this.deckPile.y = 260;
 		}
 		
 		private function loadFieldPiles():void {
@@ -86,6 +152,14 @@ package Games.GrandFather
 						this.sidePiles.push(sidePile);
 					}	
 			}
+		}
+		
+		public function get IsWin():Boolean {
+			return this.isWin;	
+		}
+		
+		public function get IsGameRunning():Boolean {
+			return this.isGameRunning;	
 		}
 	}
 
