@@ -13,6 +13,7 @@ package
 	import Games.Prison.PrisonSolitaire;
 	import Games.Alternations.AlternationSolitaire
 	import Games.TopsyTurvyQueens.TopsyTurvyQueens;
+
 	
 	/**
 	 * ...
@@ -28,7 +29,7 @@ package
 		private const BUTTON_WIDTH:int = 200;
 		private const BUTTON_HEIGHT:int = 60;
 		private const BUTTON_SPACING:int = 5;
-		
+
 		private var backgroundPath:String = "background1.jpg";
 		private var cash:int = 1000;
 		private var bet:int = 0;
@@ -104,7 +105,7 @@ package
 		private function startGame(game:Object)
 		{
 			clearMainMenu();
-			clearBetButtons();
+			clearBetButtons();			
 			
 			var selectedGame = new game();
 			selectedGame.addEventListener(Event.ENTER_FRAME, checkGameOver, false, 0, true);
@@ -137,7 +138,7 @@ package
 		private function win():void
 		{
 			var winMessagePath:String = "winButton.png";
-			
+		
 			addChild(messageContainer);
 			var winMessageURL:URLRequest = new URLRequest("Data/images/Buttons/" + winMessagePath);
 			var loader:Loader = new Loader();
@@ -150,11 +151,8 @@ package
 				winMessage = new Bitmap(bmp.bitmapData);
 				loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, loaderCompleate);
 				messageContainer.addChild(winMessage);
-				messageContainer.x = -450;
-				messageContainer.y = 200;
+			
 			}
-			TweenMax.to(messageContainer, 1, {x: 180, y: 200, ease: Bounce.easeOut});
-			TweenMax.to(messageContainer, 1, {x: 900, y: 200, autoAlpha: 0, delay: 2.5});
 			
 			setTimeout(clearMessage, 4000);
 		}
@@ -176,14 +174,15 @@ package
 				loseMessage = new Bitmap(bmp.bitmapData);
 				loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, loaderCompleate);
 				messageContainer.addChild(loseMessage);
-				messageContainer.x = -450;
+				messageContainer.x =-450;
 				messageContainer.y = 200;
 			}
 			TweenMax.to(messageContainer, 1, {x: 180, y: 200, ease: Bounce.easeOut});
 			TweenMax.to(messageContainer, 1, {x: 900, y: 200, autoAlpha: 0, delay: 2.5});
-			
+		
 			setTimeout(clearMessage, 4000);
 		}
+		
 		
 		private function clearMessage():void
 		{
@@ -255,7 +254,7 @@ package
 			addChild(buttonsContainer);
 			var buttonWidth:int = 65;
 			
-			moneyStatus = new Button(120, "Credits: ", false)
+			moneyStatus = new Button(120, "Credits: " + cash.toString(), false);
 			addChild(moneyStatus);
 			moneyStatus.height = 25;
 			moneyStatus.x = 150;
@@ -320,9 +319,6 @@ package
 			{
 				bet += int(currentBet);
 				cash -= int(currentBet);
-				
-				trace(currentBet);
-				trace(cash);
 				resetStatusBar();
 			}
 		}
